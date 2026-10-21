@@ -54,10 +54,6 @@ jobs:
       matrix:
         tag: "${{ fromJson(needs.tags.outputs.tags) }}"
     steps:
-      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v5
-        with:
-          node-version: latest
-          registry-url: "https://registry.npmjs.org"
       - id: app-token
         uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
         with:
@@ -73,6 +69,14 @@ jobs:
           fetch-depth: 0
           token: "${{ steps.app-token.outputs.token }}"
           path: client-ts
+      - name: Setup pnpm
+        uses: pnpm/action-setup@ea17c68df8912ef543352723c149a84f56e3d413 # v6.1.0
+        with:
+          version: 12.9.1
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v5
+        with:
+          node-version-file: client-ts/.nvmrc
+          registry-url: "https://registry.npmjs.org"
       - name: Fetch schema
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
